@@ -39,13 +39,8 @@ void createNote(BuildContext context) async {
   id= await SQLHelper.createNote(title, content,levels,done );
   readTask();
   print('create note after db');// update the list instantly
-  if (id ) {
-    print('success');
+    print('success $id');
     // showSuccessSnackBar(context);
-  } else {
-    print('error by me');
-    // showErrorSnackBar(context);
-  }
 }
 
 Future<void> updateNote(int id,
