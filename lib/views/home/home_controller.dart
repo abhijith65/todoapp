@@ -35,10 +35,11 @@ void createNote(BuildContext context) async {
   String content = contentController.text;
   String levels=levelController.text;
   print('create note before db');
-  int id = await SQLHelper.createNote(title, content,levels,done );
+  int? id;
+  id= await SQLHelper.createNote(title, content,levels,done );
   readTask();
   print('create note after db');// update the list instantly
-  if (id != null) {
+  if (id ) {
     print('success');
     // showSuccessSnackBar(context);
   } else {
@@ -67,75 +68,87 @@ Future<void> deleteIt(int id) async{
       titleController.text   = existingTask['title'];
       contentController.text = existingTask['content'];
     }
-    showDialog(context: context, builder: (context){
-      return Card(
-        child: Padding(
-          padding: EdgeInsets.only(
-            top: 15,
-            left: 15,
-            right: 15,),
-          //  bottom: MediaQuery.of(context).viewInsets.bottom + 120),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: TextField(
-                  controller: titleController,
-                  decoration: const InputDecoration(
-                      hintText: "Title", border: OutlineInputBorder()),
-                ),
-              ),
-              Padding(
-                padding:
-                const EdgeInsets.only(left: 10.0, right: 10, bottom: 10),
-                child: TextField(
-                  maxLines: 3,
-                  controller: contentController,
-                  decoration: const InputDecoration(
-                      hintText: "Content", border: OutlineInputBorder()),
-                ),
-              ),
-              Wrap(
-                  children: [
-                    Text('priority level: ',style: MyTextThemes.bodyTextStyle,),
-                    Container(
-                      color: Colors.blueGrey.shade200,
-                      child: Padding(
-                        padding: const EdgeInsets.all(2.0),
-                        child: TextField(
-                          controller: levelController,
-                          decoration: InputDecoration(
-                            hintText: 'high , medium or low',
-                            border: InputBorder.none,filled: true
-                          ),
-                        )
-                      ),
-                    ),
-                  ]
-              ),
-              MaterialButton(
-                  color: MyColors.basicColor,
-                  shape: const StadiumBorder(),
-                  onPressed: () {
-                    print('button press');
+    showModalBottomSheet(context: context,isScrollControlled: true,
+        builder: (context){
+      return Padding(
 
-                    if(id == null) {
-                      createNote(context);
-                    }
-                    if(id != null){
-                      updateNote(id,titleController.text,
-                          contentController.text,levelController.text,done);
-                    }
-                    levelController.clear();
-                    titleController.clear();
-                    contentController.clear();
-                    Navigator.pop(context);
-                  },
-                  child: Text(id == null
-                      ? "Create Note"
-                      : "Update Note"))
-            ],
+        padding:  EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: Container(
+          height: 500,
+          child: Card(
+            child: Padding(
+              padding: EdgeInsets.only(
+                top: 15,
+                left: 15,
+                right: 15,),
+              //  bottom: MediaQuery.of(context).viewInsets.bottom + 120),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: TextField(
+                      textInputAction: TextInputAction.next,
+                      controller: titleController,
+                      decoration: const InputDecoration(
+                          hintText: "Title", border: OutlineInputBorder()),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                    const EdgeInsets.only(left: 10.0, right: 10, bottom: 10),
+                    child: TextField(
+                      textInputAction: TextInputAction.next,
+                      maxLines: 3,
+                      controller: contentController,
+                      decoration: const InputDecoration(
+                          hintText: "Content", border: OutlineInputBorder()),
+                    ),
+                  ),
+                  Wrap(
+                      children: [
+                        Text('priority level: ',style: MyTextThemes.bodyTextStyle,),
+                        Container(
+                          color: Colors.blueGrey.shade200,
+                          child: Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: TextField(
+                              controller: levelController,
+                              decoration: InputDecoration(
+                                hintText: 'high , medium or low',
+                                border: InputBorder.none,filled: true
+                              ),
+                            )
+                          ),
+                        ),
+                      ]
+                  ),
+                  MaterialButton(
+                      color: MyColors.basicColor,
+                      shape: const StadiumBorder(),
+                      onPressed: () {
+                        print('button press');
+
+                        if(id == null) {
+                          createNote(context);
+                        }
+                        if(id != null){
+                          updateNote(id,titleController.text,
+                              contentController.text,levelController.text,done);
+                        }
+                        levelController.clear();
+                        titleController.clear();
+                        contentController.clear();
+                        Navigator.pop(context);
+                      },
+                      child: Text(id == null
+                          ? "Create Note"
+                          : "Update Note"))
+                ],
+              ),
+            ),
           ),
         ),
       );

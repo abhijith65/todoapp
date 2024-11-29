@@ -13,6 +13,7 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     final home_controller = Provider.of<HomeController>(context);
     return SafeArea(
+      top: true,
       child: Scaffold(
         appBar: AppBar(
          backgroundColor: MyColors.basicColor,
