@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants/colors.dart';
@@ -39,7 +38,7 @@ void createNote(BuildContext context) async {
   id= await SQLHelper.createNote(title, content,levels,done );
   readTask();
   print('create note after db');// update the list instantly
-    print('success $id');
+    debugPrint('success $id');
     // showSuccessSnackBar(context);
 }
 

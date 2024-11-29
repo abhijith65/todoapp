@@ -67,7 +67,7 @@ class Home extends StatelessWidget {
               return ListTile(
                 leading:  IconButton(
                                         onPressed: () {
-                                          print('deleteit pressed');
+                                          debugPrint('deleteit pressed');
                                           home_controller.deleteIt(task['id']);
                                         },
                                         icon: const Icon(Icons.delete)) ,
