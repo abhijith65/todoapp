@@ -5,89 +5,91 @@ import 'package:todo_app/views/widget/button.dart';
 
 import '../../constants/colors.dart';
 import '../../constants/textstyle.dart';
-import '../../database/database.dart';
+
 
 
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final home_controller = Provider.of<HomeController>(context);
-    return Scaffold(
-      appBar: AppBar(
-       backgroundColor: MyColors.basicColor,
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+         backgroundColor: MyColors.basicColor,
 
-        title: Text(
-          "Todo App",
-          style: MyTextThemes.textHeading,
+          title: Text(
+            "Todo App",
+            style: MyTextThemes.textHeading,
+          ),
+          actions: [
+            Wrap(
+              children: [
+                Text('sort-',style: MyTextThemes.bodyTextStyle,),
+                Consumer<HomeController>(
+                  builder: (context, homecontroller, child) {
+                    return DropdownButton<String>(
+                      value: homecontroller.selectedValue,
+                      onChanged: (String? newValue) {
+                        if (newValue != null) {
+                          homecontroller.setSelectedValue(newValue);
+                          home_controller.filterBylevel(newValue);
+                        }
+                      },
+                      items: <String>['all', 'high', 'medium', 'low']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    );
+                  },
+                ),
+
+              ],
+            )
+          ],
         ),
-        actions: [
-          Wrap(
-            children: [
-              Text('sort-',style: MyTextThemes.bodyTextStyle,),
-              Consumer<HomeController>(
-                builder: (context, homecontroller, child) {
-                  return DropdownButton<String>(
-                    value: homecontroller.selectedValue,
-                    onChanged: (String? newValue) {
-                      if (newValue != null) {
-                        homecontroller.setSelectedValue(newValue);
-                        home_controller.filterBylevel(newValue);
-                      }
-                    },
-                    items: <String>['all', 'high', 'medium', 'low']
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  );
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: MyColors.basicColor,
+          onPressed: () => home_controller.showSheet(null,context), // while creating a note id wil be null
+          child: const Icon(
+            Icons.note_alt_outlined,
+          ),
+        ),
+        body: home_controller.tasklist.isEmpty
+            ? const Center(child: Text('you have no tasks'))
+            :ListView.builder(
+          itemCount: home_controller.tasklist.length,
+            itemBuilder: (context,index){
+              final task = home_controller.tasklist[index];
+              return ListTile(
+                leading:  IconButton(
+                                        onPressed: () {
+                                          print('deleteit pressed');
+                                          home_controller.deleteIt(task['id']);
+                                        },
+                                        icon: const Icon(Icons.delete)) ,
+                title:  Text(task['title'],style: MyTextThemes.bodyTextStyle,) ,
+                subtitle: Wrap(children: [
+                  Text('priority level: '),
+                  LevelButton(task['level'])
+                ]),
+                trailing: IconButton(onPressed: (){
+                  var g;
+                  task['done']=='false'?g='true':g='false';
+
+                  home_controller.updateNote(task['id'], task['title'], task['content'], task['level'],g);
+
+
+                }, icon:task['done']=='false'? Icon(Icons.check_box_outline_blank):Icon(Icons.check_box)),
+                onTap: (){
+                  home_controller.showSheet(task['id'], context);
                 },
-              ),
 
-            ],
-          )
-        ],
+              );
+        })
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: MyColors.basicColor,
-        onPressed: () => home_controller.showSheet(null,context), // while creating a note id wil be null
-        child: const Icon(
-          Icons.note_alt_outlined,
-        ),
-      ),
-      body: home_controller.tasklist.isEmpty
-          ? const Center(child: Text('you have no tasks'))
-          :ListView.builder(
-        itemCount: home_controller.tasklist.length,
-          itemBuilder: (context,index){
-            final task = home_controller.tasklist[index];
-            return ListTile(
-              leading:  IconButton(
-                                      onPressed: () {
-                                        print('deleteit pressed');
-                                        home_controller.deleteIt(task['id']);
-                                      },
-                                      icon: const Icon(Icons.delete)) ,
-              title:  Text(task['title'],style: MyTextThemes.bodyTextStyle,) ,
-              subtitle: Wrap(children: [
-                Text('priority level: '),
-                LevelButton(task['level'])
-              ]),
-              trailing: IconButton(onPressed: (){
-                var g;
-                task['done']=='false'?g='true':g='false';
-                
-                home_controller.updateNote(task['id'], task['title'], task['content'], task['level'],g);
-
-               
-              }, icon:task['done']=='false'? Icon(Icons.check_box_outline_blank):Icon(Icons.check_box)),
-              onTap: (){
-                home_controller.showSheet(task['id'], context);
-              },
-
-            );
-      })
     );
   }
 
