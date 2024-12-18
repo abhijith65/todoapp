@@ -4,13 +4,13 @@ import 'package:todo_app/constants/colors.dart';
 
 class MyTextThemes {
   static TextStyle textHeading = const TextStyle(
-    fontSize: 28,
+    fontSize: 48,
     fontWeight: FontWeight.bold,
     decorationStyle: TextDecorationStyle.dashed
   );
 
   static TextStyle bodyTextStyle = TextStyle(
-      fontSize: 22,
+      fontSize: 32,
       fontWeight: FontWeight.w800
       //fontStyle: FontStyle.normal
   );

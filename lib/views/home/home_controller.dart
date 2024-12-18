@@ -70,6 +70,10 @@ Future<void> deleteIt(int id) async{
         child: Container(
           height: 500,
           child: Card(
+            shadowColor: Colors.black,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30))
+            ),
             child: Padding(
               padding: EdgeInsets.only(
                 top: 15,
